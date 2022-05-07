@@ -1,0 +1,59 @@
+body {
+  font-family: sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+label {
+  display: block;
+}
+
+nav a {
+  display: inline-block;
+  margin: 1em;
+}
+
+form div {
+  margin: 1em;
+  display: inline-block;
+}
+
+#logo {
+  max-width: 400px;
+  max-height: fit-content;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+.navbar > .container.navbar-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.singleProductCard {
+  background-color: #b7e0f2;
+  border-radius: 50px;
+  padding: 1rem;
+  margin: 10px;
+}
+
+.singleProductCardImage {
+  border-radius: 50;
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  width: 100px;
+  height: 100px;
+}
