@@ -1,13 +1,37 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 import { injectStyle } from 'react-toastify/dist/inject-style';
 
 const SingleProductCard = ({ product }) => {
-  const { imageUrl, name, price, category } = product;
+  const { id, imageUrl, name, price, category } = product;
 
   const added = () => {
+    const token = window.localStorage.getItem('token');
+    const cart = window.localStorage.getItem('guestCart');
+
+    if (!token && !cart) {
+      const guestCart = [{ id, name, price, quantity: 1 }];
+      window.localStorage.setItem('guestCart', JSON.stringify(guestCart));
+    }
+
+    if (!token && cart) {
+      const oldCart = JSON.parse(cart);
+      const itemAlreadyAdded = oldCart.find((item) => item.id === id);
+
+      if (itemAlreadyAdded) {
+        const updatedCart = oldCart.filter((item) => item.id !== id);
+        itemAlreadyAdded.quantity = itemAlreadyAdded.quantity + 1;
+        updatedCart.push(itemAlreadyAdded);
+        window.localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+      } else {
+        oldCart.push({ id, name, price, quantity: 1 });
+        window.localStorage.setItem('guestCart', JSON.stringify(oldCart));
+      }
+    }
+
     injectStyle();
     toast.success('Added to Cart!');
   };

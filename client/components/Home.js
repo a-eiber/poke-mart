@@ -8,6 +8,8 @@ import SingleProductCard from './SingleProductCard';
 
 const Home = () => {
   const products = useSelector((state) => state.products.entities);
+  // const user = useSelector((state) => state.auth.user);
+  // console.log(user);
   const dispatch = useDispatch();
 
   useEffect(() => {

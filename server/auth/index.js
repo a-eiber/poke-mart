@@ -12,7 +12,11 @@ module.exports = router;
 router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    res.send({ token: await User.authenticate({ email, password }) });
+    const token = await User.authenticate({ email, password });
+
+    window.localStorage.setItem('token', token);
+
+    res.send(await User.findByToken(token));
   } catch (err) {
     next(err);
   }
@@ -26,20 +30,6 @@ router.post('/signup', async (req, res, next) => {
     const { firstName, lastName, email, password, street, city, state, zip } =
       req.body;
 
-    // Check if all fields were included
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !password ||
-      !street ||
-      !city ||
-      !state ||
-      !zip
-    ) {
-      res.status(400).send('Please add all fields');
-    }
-
     const user = await User.create({
       firstName,
       lastName,
@@ -50,7 +40,11 @@ router.post('/signup', async (req, res, next) => {
       state,
       zip,
     });
-    res.send({ token: await user.generateToken() });
+    const token = await user.generateToken();
+
+    window.localStorage.setItem('token', token);
+    
+    res.send(await User.findByToken(token));
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       res.status(401).send('User already exists');

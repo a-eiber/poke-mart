@@ -1,120 +1,152 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-// Get user from localStorage
-const user = JSON.parse(localStorage.getItem('user'));
-
-const initialState = {
-  user: user ? user : null,
-  isError: false,
-  isSuccess: false,
-  isLoading: false,
-};
-
-// Login user
 export const login = createAsyncThunk(
-  'auth/login',
+  'auth/loginStatus',
   async (userData, thunkAPI) => {
-    try {
-      const { email, password } = userData;
-      const response = await axios.post('/auth/login', { email, password });
-      const token = response.data.token;
-      if (token) {
-        const res = await axios.get('/auth/me', {
-          headers: {
-            authorization: token,
-          },
-        });
-        localStorage.setItem('user', JSON.stringify(res.data));
-        localStorage.setItem('token', token);
-        return res.data;
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.toString());
-    }
+    const { email, password } = userData;
+    const response = await axios.post('/auth/login', { email, password });
+    return response.data;
   },
 );
 
-// Register user
 export const register = createAsyncThunk(
-  'auth/register',
+  'auth/registerStatus',
   async (userData, thunkAPI) => {
-    try {
-      const { username, password } = userData;
-      const adminToken = localStorage.getItem('token');
-      const response = await axios.post(
-        '/auth/signup',
-        { username, password },
-        {
-          headers: {
-            authorization: adminToken,
-          },
-        },
-      );
-      const token = response.data.token;
-      if (token) {
-        const res = await axios.get('/auth/me', {
-          headers: {
-            authorization: token,
-          },
-        });
-        return res.data;
-      }
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.toString());
-    }
+    const { firstName, lastName, email, password, street, city, state, zip } =
+      userData;
+
+    const response = await axios.post('/auth/signup', {
+      firstName,
+      lastName,
+      email,
+      password,
+      street,
+      city,
+      state,
+      zip,
+    });
+    return response.data;
   },
 );
 
-export const logout = createAsyncThunk('auth/logout', () => {
-  localStorage.removeItem('user');
-  localStorage.removeItem('token');
+export const me = createAsyncThunk('auth/meStatus', async (_, thunkAPI) => {
+  const token = window.localStorage.getItem('token');
+  if (token) {
+    const { data } = await axios.get('/auth/me', {
+      headers: {
+        authorization: token,
+      },
+    });
+    return data;
+  }
 });
 
 export const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: {
+    user: {},
+    loading: 'idle',
+    currentRequestId: undefined,
+    error: null,
+  },
   reducers: {
-    reset: (state) => {
-      state.isLoading = false;
-      state.isSuccess = false;
-      state.isError = false;
-      state.message = '';
+    logout: (state) => {
+      const navigate = useNavigate();
+      window.localStorage.removeItem('token');
+      state.auth = {};
+      navigate('/');
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(login.pending, (state) => {
-        state.isLoading = true;
+      .addCase(me.pending, (state, action) => {
+        if (state.loading === 'idle') {
+          state.loading = 'pending';
+          state.currentRequestId = action.meta.requestId;
+        }
+      })
+      .addCase(me.fulfilled, (state, action) => {
+        const { requestId } = action.meta;
+        if (
+          state.loading === 'pending' &&
+          state.currentRequestId === requestId
+        ) {
+          state.loading = 'idle';
+          state.user = action.payload;
+          state.currentRequestId = undefined;
+        }
+      })
+      .addCase(me.rejected, (state, action) => {
+        const { requestId } = action.meta;
+        if (
+          state.loading === 'pending' &&
+          state.currentRequestId === requestId
+        ) {
+          state.loading = 'idle';
+          state.error = action.error;
+          state.currentRequestId = undefined;
+        }
+      })
+      .addCase(login.pending, (state, action) => {
+        if (state.loading === 'idle') {
+          state.loading = 'pending';
+          state.currentRequestId = action.meta.requestId;
+        }
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.user = action.payload;
+        const { requestId } = action.meta;
+        if (
+          state.loading === 'pending' &&
+          state.currentRequestId === requestId
+        ) {
+          state.loading = 'idle';
+          state.user = action.payload;
+          state.currentRequestId = undefined;
+        }
       })
       .addCase(login.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        state.user = null;
+        const { requestId } = action.meta;
+        if (
+          state.loading === 'pending' &&
+          state.currentRequestId === requestId
+        ) {
+          state.loading = 'idle';
+          state.error = action.error;
+          state.currentRequestId = undefined;
+        }
       })
-      .addCase(register.pending, (state) => {
-        state.isLoading = true;
+      .addCase(register.pending, (state, action) => {
+        if (state.loading === 'idle') {
+          state.loading = 'pending';
+          state.currentRequestId = action.meta.requestId;
+        }
       })
       .addCase(register.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
+        const { requestId } = action.meta;
+        if (
+          state.loading === 'pending' &&
+          state.currentRequestId === requestId
+        ) {
+          state.loading = 'idle';
+          state.user = action.payload;
+          state.currentRequestId = undefined;
+        }
       })
       .addCase(register.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
-      .addCase(logout.fulfilled, (state) => {
-        state.user = null;
+        const { requestId } = action.meta;
+        if (
+          state.loading === 'pending' &&
+          state.currentRequestId === requestId
+        ) {
+          state.loading = 'idle';
+          state.error = action.error;
+          state.currentRequestId = undefined;
+        }
       });
   },
 });
 
-export const { reset } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;
