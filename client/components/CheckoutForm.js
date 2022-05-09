@@ -11,7 +11,7 @@ const CheckoutForm = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(completePurchase());
-    navigate('/Confirmation');
+    navigate('/confirmation');
   };
 
   return (

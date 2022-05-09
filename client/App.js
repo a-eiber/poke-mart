@@ -8,9 +8,9 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import Login from './components/Login';
-import Logout from './components/Logout';
 import CartPage from './components/CartPage';
 import Confirmation from './components/Confirmation';
+import Signup from './components/Signup';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/confirmation" element={<Confirmation />} />
       </Routes>

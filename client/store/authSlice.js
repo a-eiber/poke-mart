@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { injectStyle } from 'react-toastify/dist/inject-style';
 
 export const login = createAsyncThunk(
   'auth/loginStatus',
@@ -14,21 +16,25 @@ export const login = createAsyncThunk(
 export const register = createAsyncThunk(
   'auth/registerStatus',
   async (userData, thunkAPI) => {
-    const { firstName, lastName, email, password, street, city, state, zip } =
-      userData;
+    try {
+      const { firstName, lastName, email, password, street, city, state, zip } =
+        userData;
 
-    const response = await axios.post('/auth/signup', {
-      firstName,
-      lastName,
-      email,
-      password,
-      street,
-      city,
-      state,
-      zip,
-    });
-    window.localStorage.setItem('token', response.data[1]);
-    return response.data[0];
+      const response = await axios.post('/auth/signup', {
+        firstName,
+        lastName,
+        email,
+        password,
+        street,
+        city,
+        state,
+        zip,
+      });
+      window.localStorage.setItem('token', response.data[1]);
+      return response.data[0];
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
   },
 );
 
