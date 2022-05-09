@@ -4,6 +4,7 @@ import { injectStyle } from 'react-toastify/dist/inject-style';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCart, updateCart } from '../store/cartSlice';
 import { Col, Container, Row, Button } from 'react-bootstrap';
+import CheckoutForm from './CheckoutForm';
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -54,7 +55,6 @@ const Cart = () => {
         <Col xs={1}>Price</Col>
       </Row>
       <hr />
-
       {cartItems && cartItems.length ? (
         cartItems.map((item) => {
           return (
@@ -100,21 +100,26 @@ const Cart = () => {
       ) : (
         <h3 className="text-center">There aren't any items in your cart</h3>
       )}
-      <hr />
-      <Row>
-        <Col xs={9}>Subtotal:</Col>
-        <Col xs={1}>
-          $
-          {cartItems &&
-            cartItems.length &&
-            cartItems
-              .reduce((previousValue, currentValue) => {
-                return previousValue + currentValue.totalPrice / 100;
-              }, 0)
-              .toFixed(2)}
-        </Col>
-      </Row>
-      <hr />
+      {cartItems && cartItems.length > 0 && (
+        <div>
+          <hr />
+          <Row>
+            <Col xs={9}>Subtotal:</Col>
+            <Col xs={1}>
+              $
+              {cartItems &&
+                cartItems.length &&
+                cartItems
+                  .reduce((previousValue, currentValue) => {
+                    return previousValue + currentValue.totalPrice / 100;
+                  }, 0)
+                  .toFixed(2)}
+            </Col>
+          </Row>
+          <hr />
+          <CheckoutForm />
+        </div>
+      )}
     </Container>
   );
 };

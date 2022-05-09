@@ -39,6 +39,34 @@ export const updateCart = createAsyncThunk(
   },
 );
 
+export const completePurchase = createAsyncThunk(
+  'cart/completePurchaseStatus',
+  async (_, thunkAPI) => {
+
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      const response = await axios.post(
+        '/api/cart/complete',
+        {},
+        {
+          headers: {
+            authorization: token,
+          },
+        },
+      );
+      return response.data;
+    }
+
+    const guestCart = window.localStorage.getItem('guestCart');
+
+    if (guestCart) {
+      return window.localStorage.removeItem('guestCart');
+    } else {
+      return;
+    }
+  },
+);
+
 export const cartSlice = createSlice({
   name: 'cart',
   initialState: {
@@ -78,6 +106,23 @@ export const cartSlice = createSlice({
         }
       })
       .addCase(updateCart.rejected, (state, action) => {
+        if (state.loading === 'pending') {
+          state.loading = 'idle';
+          state.error = action.error;
+        }
+      })
+      .addCase(completePurchase.pending, (state) => {
+        if (state.loading === 'idle') {
+          state.loading = 'pending';
+        }
+      })
+      .addCase(completePurchase.fulfilled, (state) => {
+        if (state.loading === 'pending') {
+          state.loading = 'idle';
+          state.cartItems = [];
+        }
+      })
+      .addCase(completePurchase.rejected, (state, action) => {
         if (state.loading === 'pending') {
           state.loading = 'idle';
           state.error = action.error;

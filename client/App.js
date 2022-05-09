@@ -10,6 +10,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import CartPage from './components/CartPage';
+import Confirmation from './components/Confirmation';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/confirmation" element={<Confirmation />} />
       </Routes>
       <Footer />
       <ToastContainer position="top-center" autoClose={3000} />

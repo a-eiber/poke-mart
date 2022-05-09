@@ -13,15 +13,15 @@ module.exports = router;
 // Access: Private (user only)
 router.get('/', requireToken, async (req, res, next) => {
   try {
-    const { id } = await Order.findOne({
+    const order = await Order.findOne({
       where: { userId: req.user.id, isComplete: false },
     });
-    if (!id) {
+    if (!order) {
       return res.send({});
     }
 
     const cart = await OrderProducts.findAll({
-      where: { orderId: id },
+      where: { orderId: order.id },
       include: { model: Product },
     });
     if (!cart) {
@@ -127,9 +127,9 @@ router.post('/edit', requireToken, async (req, res, next) => {
 });
 
 // Description: Complete purchase
-// Route: PUT /api/cart/complete
+// Route: POST /api/cart/complete
 // Access: Private (user only)
-router.put('/complete', requireToken, async (req, res, next) => {
+router.post('/complete', requireToken, async (req, res, next) => {
   try {
     let order = await Order.findOne({
       where: { userId: req.user.id, isComplete: false },
@@ -140,6 +140,6 @@ router.put('/complete', requireToken, async (req, res, next) => {
     });
     return res.json(completedOrder);
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });

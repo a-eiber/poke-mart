@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Container, Row, Button } from 'react-bootstrap';
+import CheckoutForm from './CheckoutForm';
 
 const GuestCart = () => {
   const [toggle, setToggle] = useState(false);
@@ -13,6 +14,9 @@ const GuestCart = () => {
       updatedCart.push(itemAlreadyAdded);
     }
     window.localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+    if (!updatedCart.length) {
+      window.localStorage.removeItem('guestCart');
+    }
     setToggle(!toggle);
   };
 
@@ -28,6 +32,9 @@ const GuestCart = () => {
   const deleteAll = (item) => {
     const updatedCart = cart.filter((cartItem) => cartItem.id !== item.id);
     window.localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+    if (!updatedCart.length) {
+      window.localStorage.removeItem('guestCart');
+    }
     setToggle(!toggle);
   };
 
@@ -90,23 +97,28 @@ const GuestCart = () => {
         <h3 className="text-center">There aren't any items in your cart</h3>
       )}
       <hr />
-      <Row>
-        <Col xs={9}>Subtotal:</Col>
-        <Col xs={1}>
-          $
-          {cart &&
-            cart.length &&
-            cart
-              .reduce((previousValue, currentValue) => {
-                return (
-                  previousValue +
-                  (currentValue.price * currentValue.quantity) / 100
-                );
-              }, 0)
-              .toFixed(2)}
-        </Col>
-      </Row>
-      <hr />
+      {cart && cart.length > 0 && (
+        <div>
+          <Row>
+            <Col xs={9}>Subtotal:</Col>
+            <Col xs={1}>
+              $
+              {cart &&
+                cart.length &&
+                cart
+                  .reduce((previousValue, currentValue) => {
+                    return (
+                      previousValue +
+                      (currentValue.price * currentValue.quantity) / 100
+                    );
+                  }, 0)
+                  .toFixed(2)}
+            </Col>
+          </Row>
+          <hr />
+          <CheckoutForm />
+        </div>
+      )}
     </Container>
   );
 };
