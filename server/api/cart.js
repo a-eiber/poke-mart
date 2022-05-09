@@ -42,7 +42,7 @@ router.post('/edit', requireToken, async (req, res, next) => {
     const [order, created] = await Order.findOrCreate({
       where: { userId: req.user.id, isComplete: false },
       defaults: {
-        userId: req.user.id,
+        userId: Number(req.user.id),
         isComplete: false,
       },
     });
@@ -70,10 +70,17 @@ router.post('/edit', requireToken, async (req, res, next) => {
         await OrderProducts.destroy({
           where: { orderId: order.id, productId },
         });
-        return res.send('Item deleted');
+        const newCart = await OrderProducts.findAll({
+          where: { orderId: order.id },
+          include: { model: Product },
+        });
+        if (!newCart) {
+          return res.send([]);
+        }
+        return res.json(newCart);
       }
 
-      const updatedCartItem = await OrderProducts.update(
+      await OrderProducts.update(
         {
           quantity: existingQuantity + Number(updatedQuantity),
           unitPrice: Number(unitPrice),
@@ -91,22 +98,30 @@ router.post('/edit', requireToken, async (req, res, next) => {
           ],
         },
       );
-      return res.json(updatedCartItem);
+
+      const newCart = await OrderProducts.findAll({
+        where: { orderId: order.id },
+        include: { model: Product },
+      });
+      if (!newCart) {
+        return res.send('No cart items');
+      }
+      return res.json(newCart);
     }
 
     if (!cartItem && updatedQuantity > 0) {
-      const order = await OrderProducts.create({
+      const createdOrder = await OrderProducts.create({
         orderId: order.id,
         productId: Number(productId),
         quantity: Number(updatedQuantity),
         unitPrice: Number(unitPrice),
         totalPrice: updatedTotalPrice,
       });
-      res.json(order);
+      res.json(createdOrder);
     } else {
       return res.send('Item not found');
     }
-  } catch (err) {
+  } catch (error) {
     next(error);
   }
 });

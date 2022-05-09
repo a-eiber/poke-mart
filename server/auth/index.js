@@ -13,10 +13,7 @@ router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const token = await User.authenticate({ email, password });
-
-    window.localStorage.setItem('token', token);
-
-    res.send(await User.findByToken(token));
+    res.send([await User.findByToken(token), token]);
   } catch (err) {
     next(err);
   }
@@ -42,9 +39,7 @@ router.post('/signup', async (req, res, next) => {
     });
     const token = await user.generateToken();
 
-    window.localStorage.setItem('token', token);
-    
-    res.send(await User.findByToken(token));
+    res.send([await User.findByToken(token), token]);
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       res.status(401).send('User already exists');

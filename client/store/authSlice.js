@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export const login = createAsyncThunk(
@@ -7,7 +6,8 @@ export const login = createAsyncThunk(
   async (userData, thunkAPI) => {
     const { email, password } = userData;
     const response = await axios.post('/auth/login', { email, password });
-    return response.data;
+    window.localStorage.setItem('token', response.data[1]);
+    return response.data[0];
   },
 );
 
@@ -27,7 +27,8 @@ export const register = createAsyncThunk(
       state,
       zip,
     });
-    return response.data;
+    window.localStorage.setItem('token', response.data[1]);
+    return response.data[0];
   },
 );
 
@@ -48,15 +49,12 @@ export const authSlice = createSlice({
   initialState: {
     user: {},
     loading: 'idle',
-    currentRequestId: undefined,
     error: null,
   },
   reducers: {
     logout: (state) => {
-      const navigate = useNavigate();
       window.localStorage.removeItem('token');
-      state.auth = {};
-      navigate('/');
+      state.auth.user = {};
     },
   },
   extraReducers: (builder) => {
@@ -64,85 +62,52 @@ export const authSlice = createSlice({
       .addCase(me.pending, (state, action) => {
         if (state.loading === 'idle') {
           state.loading = 'pending';
-          state.currentRequestId = action.meta.requestId;
         }
       })
       .addCase(me.fulfilled, (state, action) => {
-        const { requestId } = action.meta;
-        if (
-          state.loading === 'pending' &&
-          state.currentRequestId === requestId
-        ) {
+        if (state.loading === 'pending') {
           state.loading = 'idle';
           state.user = action.payload;
-          state.currentRequestId = undefined;
         }
       })
       .addCase(me.rejected, (state, action) => {
-        const { requestId } = action.meta;
-        if (
-          state.loading === 'pending' &&
-          state.currentRequestId === requestId
-        ) {
+        if (state.loading === 'pending') {
           state.loading = 'idle';
           state.error = action.error;
-          state.currentRequestId = undefined;
         }
       })
       .addCase(login.pending, (state, action) => {
         if (state.loading === 'idle') {
           state.loading = 'pending';
-          state.currentRequestId = action.meta.requestId;
         }
       })
       .addCase(login.fulfilled, (state, action) => {
-        const { requestId } = action.meta;
-        if (
-          state.loading === 'pending' &&
-          state.currentRequestId === requestId
-        ) {
+        if (state.loading === 'pending') {
           state.loading = 'idle';
           state.user = action.payload;
-          state.currentRequestId = undefined;
         }
       })
       .addCase(login.rejected, (state, action) => {
-        const { requestId } = action.meta;
-        if (
-          state.loading === 'pending' &&
-          state.currentRequestId === requestId
-        ) {
+        if (state.loading === 'pending') {
           state.loading = 'idle';
           state.error = action.error;
-          state.currentRequestId = undefined;
         }
       })
       .addCase(register.pending, (state, action) => {
         if (state.loading === 'idle') {
           state.loading = 'pending';
-          state.currentRequestId = action.meta.requestId;
         }
       })
       .addCase(register.fulfilled, (state, action) => {
-        const { requestId } = action.meta;
-        if (
-          state.loading === 'pending' &&
-          state.currentRequestId === requestId
-        ) {
+        if (state.loading === 'pending') {
           state.loading = 'idle';
           state.user = action.payload;
-          state.currentRequestId = undefined;
         }
       })
       .addCase(register.rejected, (state, action) => {
-        const { requestId } = action.meta;
-        if (
-          state.loading === 'pending' &&
-          state.currentRequestId === requestId
-        ) {
+        if (state.loading === 'pending') {
           state.loading = 'idle';
           state.error = action.error;
-          state.currentRequestId = undefined;
         }
       });
   },

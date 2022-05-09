@@ -8,6 +8,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import Login from './components/Login';
+import Logout from './components/Logout';
+import CartPage from './components/CartPage';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -20,8 +22,10 @@ const App = () => {
     <div>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route exact path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
       <Footer />
       <ToastContainer position="top-center" autoClose={3000} />

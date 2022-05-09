@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { login } from '../store/authSlice';
@@ -9,12 +9,20 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const { user } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(login({ email, password }));
+    navigate('/');
   };
+
+  if (user) {
+    navigate('/');
+  }
 
   return (
     <Form className="text-center" onSubmit={onSubmit}>

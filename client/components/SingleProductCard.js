@@ -1,16 +1,28 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'react-toastify';
 import { injectStyle } from 'react-toastify/dist/inject-style';
+import { useDispatch } from 'react-redux';
+import { updateCart } from '../store/cartSlice';
 
 const SingleProductCard = ({ product }) => {
+  const dispatch = useDispatch();
   const { id, imageUrl, name, price, category } = product;
 
   const added = () => {
     const token = window.localStorage.getItem('token');
     const cart = window.localStorage.getItem('guestCart');
+
+    if (token) {
+      dispatch(
+        updateCart({
+          productId: id,
+          updatedQuantity: 1,
+          unitPrice: price,
+        }),
+      );
+    }
 
     if (!token && !cart) {
       const guestCart = [{ id, name, price, quantity: 1 }];
@@ -37,7 +49,7 @@ const SingleProductCard = ({ product }) => {
   };
 
   return (
-    <Card className="singleProductCard">
+    <Card className="singleProductCard d-flex justify-self-center">
       <Card.Img
         variant="top"
         src={imageUrl}
