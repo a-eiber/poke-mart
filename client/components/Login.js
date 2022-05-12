@@ -26,11 +26,10 @@ const Login = () => {
       injectStyle();
       toast.error('Login Information Incorrect');
     }
-  }, [error]);
-
-  if (user) {
-    navigate('/');
-  }
+    if (user) {
+      navigate('/');
+    }
+  }, [error, user]);
 
   return (
     <Form className="text-center" onSubmit={onSubmit}>

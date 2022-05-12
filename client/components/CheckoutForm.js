@@ -1,5 +1,5 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { completePurchase } from '../store/cartSlice';
@@ -7,6 +7,42 @@ import { completePurchase } from '../store/cartSlice';
 const CheckoutForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const user = useSelector((state) => state.auth.user);
+
+  const [formData, setFormData] = useState({
+    ccNumber: '',
+    expDate: '',
+    pin: '',
+    street: '',
+    city: '',
+    state: '',
+    zip: '',
+  });
+
+  const { ccNumber, expDate, pin, street, city, state, zip } = formData;
+
+  useEffect(() => {
+    if (user && user.id) {
+      setFormData({
+        ccNumber: '',
+        expDate: '',
+        pin: '',
+        street: user.street,
+        city: user.city,
+        state: user.state,
+        zip: user.zip,
+      });
+    }
+  }, [user]);
+
+  const onChange = (e) => {
+    e.persist();
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -20,13 +56,25 @@ const CheckoutForm = () => {
         <Col>
           <Form.Group className="mb-2 w-100">
             <Form.Label>Credit Card Number</Form.Label>
-            <Form.Control required placeholder="Credit Card Number" />
+            <Form.Control
+              required
+              name="ccNumber"
+              value={ccNumber}
+              onChange={onChange}
+              placeholder="Credit Card Number"
+            />
           </Form.Group>
         </Col>
         <Col>
           <Form.Group className="mb-2 w-100">
             <Form.Label>Expiration Date</Form.Label>
-            <Form.Control required type="date" />
+            <Form.Control
+              required
+              name="expDate"
+              value={expDate}
+              onChange={onChange}
+              type="date"
+            />
           </Form.Group>
         </Col>
         <Col>
@@ -37,7 +85,10 @@ const CheckoutForm = () => {
               type="number"
               min="0000"
               max="9999"
-              placeholder="Code"
+              name="pin"
+              value={pin}
+              onChange={onChange}
+              placeholder="Pin Code"
             />
           </Form.Group>
         </Col>
@@ -46,13 +97,25 @@ const CheckoutForm = () => {
         <Col>
           <Form.Group className="mb-2 w-100">
             <Form.Label>Street Address</Form.Label>
-            <Form.Control required placeholder="Street Address" />
+            <Form.Control
+              required
+              name="street"
+              value={street}
+              onChange={onChange}
+              placeholder="Street Address"
+            />
           </Form.Group>
         </Col>
         <Col>
           <Form.Group className="mb-2 w-100">
             <Form.Label>City</Form.Label>
-            <Form.Control required placeholder="City" />
+            <Form.Control
+              required
+              name="city"
+              value={city}
+              onChange={onChange}
+              placeholder="City"
+            />
           </Form.Group>
         </Col>
       </Row>
@@ -60,13 +123,25 @@ const CheckoutForm = () => {
         <Col>
           <Form.Group className="mb-2 w-100">
             <Form.Label>State</Form.Label>
-            <Form.Control required placeholder="State" />
+            <Form.Control
+              required
+              name="state"
+              value={state}
+              onChange={onChange}
+              placeholder="State"
+            />
           </Form.Group>
         </Col>
         <Col>
           <Form.Group className="mb-2 w-100">
             <Form.Label>Zip Code</Form.Label>
-            <Form.Control required placeholder="Zip Code" />
+            <Form.Control
+              required
+              name="zip"
+              value={zip}
+              onChange={onChange}
+              placeholder="Zip Code"
+            />
           </Form.Group>
         </Col>
       </Row>
