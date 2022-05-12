@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { login } from '../store/authSlice';
+import { toast } from 'react-toastify';
+import { injectStyle } from 'react-toastify/dist/inject-style';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { user } = useSelector((state) => state.auth);
+  const { user, loading, error } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,8 +19,14 @@ const Login = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(login({ email, password }));
-    navigate('/');
   };
+
+  useEffect(() => {
+    if (loading === 'idle' && error && error.name === 'AxiosError') {
+      injectStyle();
+      toast.error('Login Information Incorrect');
+    }
+  }, [error]);
 
   if (user) {
     navigate('/');
