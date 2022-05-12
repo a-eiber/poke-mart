@@ -32,4 +32,12 @@ const Product = db.define('product', {
     type: Sequelize.STRING,
   },
 });
+
+Product.beforeSave(function (product) {
+  if (product.imageUrl === '') {
+    product.imageUrl =
+      'https://cdn.shopify.com/s/files/1/0581/9138/0663/files/pokemart_logo_2_1200x1200.png';
+  }
+});
+
 module.exports = Product;

@@ -13,6 +13,7 @@ import Confirmation from './components/Confirmation';
 import Signup from './components/Signup';
 import SingleProductPage from './components/SingleProductPage';
 import ErrorPage from './components/ErrorPage';
+import Admin from './components/Admin';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/confirmation" element={<Confirmation />} />
         <Route path="/products/:productId" element={<SingleProductPage />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
       <Footer />

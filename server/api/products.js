@@ -9,7 +9,7 @@ module.exports = router;
 // URL Path: /api/products
 
 // Description: Create a product
-// Route: POST api/products/:id
+// Route: POST api/products
 // Access: Private (admin only)
 router.post('/', requireToken, isAdmin, async (req, res, next) => {
   try {

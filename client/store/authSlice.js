@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { injectStyle } from 'react-toastify/dist/inject-style';
 
 export const login = createAsyncThunk(
   'auth/loginStatus',
