@@ -1,6 +1,6 @@
 # Poké Mart
 
-Live Demo: https://fsa-poke-mart.herokuapp.com/
+Live Demo: https://poke-mart-fsa.herokuapp.com/
 
 An e-commerce website, Poké Mart is an online version of in-game store in the popular Pokémon franchise games. This was a group project built in five days during Fullstack Academy's 2202 cohort and is intended to showcase an example e-commerce website, including guest purchases, customer account sign-up and login, browsing different products, and checkout functionality. In addition, we implemented an admin page so administrators can create, update, and delete products on the site.
 
