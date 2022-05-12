@@ -70,11 +70,6 @@ Project is _no longer being worked on_ due to group members moving on to other p
 
 ## Room for Improvement
 
-Include areas you believe need improvement / could be improved. Also add TODOs for future development.
-
-Room for improvement:
-
-- Add categories to each product
 - Add more than one quantity of a product without having to edit quantity in the checkout page
 - Improve UI/UX experience
 - Add a 'guest-to-logged-in-user' functionality so the cart persists after logging in
@@ -90,10 +85,6 @@ Room for improvement:
 - View feature products at the top of the page
 - Add products to wishlist
 - Internationalization and localization
-
-To do:
-
-- Add guest cart functionality so customers don't have to be signed in to add items to a cart and checkout
 
 ## Acknowledgements
 
