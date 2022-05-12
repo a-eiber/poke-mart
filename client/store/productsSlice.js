@@ -9,10 +9,20 @@ export const getProducts = createAsyncThunk(
   },
 );
 
+// Add single product thunk
+export const getSingleProduct = createAsyncThunk(
+  'products/getSingleProductStatus',
+  async (id, thunkAPI) => {
+    const response = await axios.get(`/api/products/${id}`);
+    return response.data;
+  },
+);
+
 export const productSlice = createSlice({
   name: 'products',
   initialState: {
     entities: [],
+    singleProduct: {},
     loading: 'idle',
     error: null,
   },
@@ -31,6 +41,23 @@ export const productSlice = createSlice({
         }
       })
       .addCase(getProducts.rejected, (state, action) => {
+        if (state.loading === 'pending') {
+          state.loading = 'idle';
+          state.error = action.error;
+        }
+      })
+      .addCase(getSingleProduct.pending, (state) => {
+        if (state.loading === 'idle') {
+          state.loading = 'pending';
+        }
+      })
+      .addCase(getSingleProduct.fulfilled, (state, action) => {
+        if (state.loading === 'pending') {
+          state.loading = 'idle';
+          state.singleProduct = action.payload;
+        }
+      })
+      .addCase(getSingleProduct.rejected, (state, action) => {
         if (state.loading === 'pending') {
           state.loading = 'idle';
           state.error = action.error;

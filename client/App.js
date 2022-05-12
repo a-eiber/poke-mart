@@ -11,6 +11,7 @@ import Login from './components/Login';
 import CartPage from './components/CartPage';
 import Confirmation from './components/Confirmation';
 import Signup from './components/Signup';
+import SingleProductPage from './components/SingleProductPage';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/confirmation" element={<Confirmation />} />
+        <Route path="/products/:productId" element={<SingleProductPage />} />
       </Routes>
       <Footer />
       <ToastContainer position="top-center" autoClose={3000} />

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { injectStyle } from 'react-toastify/dist/inject-style';
 import { useDispatch } from 'react-redux';
 import { updateCart } from '../store/cartSlice';
+import { Link } from 'react-router-dom';
 
 const SingleProductCard = ({ product }) => {
   const dispatch = useDispatch();
@@ -50,13 +51,13 @@ const SingleProductCard = ({ product }) => {
 
   return (
     <Card className="singleProductCard d-flex justify-self-center">
-      <Card.Img
-        variant="top"
-        src={imageUrl}
-        className="singleProductCardImage"
-      />
+      <Link to={`/products/${id}`} className="singleProductCardImage">
+        <Card.Img variant="top" src={imageUrl} />
+      </Link>
       <Card.Body style={{ textAlign: 'center' }}>
-        <Card.Title>{name}</Card.Title>
+        <Link to={`/products/${id}`}>
+          <Card.Title>{name}</Card.Title>
+        </Link>
         <Card.Subtitle>Category: {category}</Card.Subtitle>
         <Card.Text>{`Price: ${(price / 100).toLocaleString('en-US', {
           style: 'currency',
