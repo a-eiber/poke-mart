@@ -13,10 +13,10 @@ const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, error } = useSelector((state) => state.auth);
+  const { user, error, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (error) {
+    if (!user && loading === 'idle' && error && error.message === 'Rejected') {
       injectStyle();
       toast.error('User Already Exists!');
     }
