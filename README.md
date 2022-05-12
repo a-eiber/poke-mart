@@ -50,9 +50,9 @@ An e-commerce website, Poké Mart is an online version of in-game store in the p
 
 ## Screenshots
 
-![All Products](./images/all-products.jpg)
-![Single Product](./images/single-product.jpg)
-![Cart](./images/cart.jpg)
+![All Products](./images/allProducts.jpg)
+![Single Product](./images/singleProduct.jpg)
+![Cart](./images/cartPage.jpg)
 ![Admin](./images/admin.jpg)
 
 ## Setup
