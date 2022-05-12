@@ -28,7 +28,6 @@ const Admin = () => {
 
   const { name, price, description, imageUrl, quantity, category } = formData;
 
-  const [updated, setUpdated] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,7 +40,6 @@ const Admin = () => {
         id,
       }),
     );
-    setUpdated(!updated);
   };
 
   const onChange = (e) => {
@@ -169,10 +167,11 @@ const Admin = () => {
       <hr />
       <div>
         <Row>
-          <Col>Name</Col>
-          <Col>Price</Col>
+          <Col xs={3}>Name</Col>
+          <Col xs={2}>Price</Col>
           <Col>Description</Col>
-          <Col>Quantity</Col>
+          <Col xs={1}>Quantity</Col>
+          <Col xs={1}>Delete Product</Col>
         </Row>
         <hr />
         {products && products.length ? (
@@ -184,7 +183,7 @@ const Admin = () => {
                 <Col>{item.description}</Col>
                 <Col xs={1}>{item.quantity}</Col>
 
-                <Col xs={1}>
+                <Col xs={1} className="d-flex">
                   <Button
                     variant="outline-primary"
                     onClick={() => deleteProductFunc(item.id)}>
